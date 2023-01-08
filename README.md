@@ -1,7 +1,6 @@
 # SocialMediaApp
 
 using Django and postgres
-
 Features:
   - Create new Post
   - See all posts
@@ -11,6 +10,12 @@ Features:
   - Follow/unfollow users
   - “Like” and “Unlike” a Post or a Comment
   - See user's following Posts
+ 
+![screenshot](https://github.com/OmarSwailam/socialmedia/blob/master/screenshots/Screenshot_20230108_033604.png)
+![screenshot](https://github.com/OmarSwailam/socialmedia/blob/master/screenshots/Screenshot_20230108_033627.png)
+![screenshot](https://github.com/OmarSwailam/socialmedia/blob/master/screenshots/Screenshot_20230108_033638.png)
+![screenshot](https://github.com/OmarSwailam/socialmedia/blob/master/screenshots/Screenshot_20230108_033846.png)
+
 
 Installation:
 
