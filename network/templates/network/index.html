@@ -1,0 +1,124 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+<form action="{% url 'add_post' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group">
+        {{ post_form }}
+        <div class="border-top-0 border-start-0 border-end-0">
+            <input class="btn btn-primary" type="submit" value="Post" />
+        </div>
+
+    </div>
+
+</form>
+<hr>
+{% endif %}
+
+<h2>{{ posts_type }}</h2>
+
+{% for post in posts %}
+
+
+<div class="card bg-light">
+
+    <div class="card-body">
+
+        <div class="card-title">
+            <div class="d-flex flex-row">
+                <h2><a href="{% url 'profile' post.user.id %}">{{ post.user }}</a></h2>
+                {% if user.is_authenticated %}
+                {% if user == post.user %}
+                <form action="{% url 'edit_post' post.id %}?next={{ request.path }}">
+                    {% csrf_token %}
+                    <button id="edit" type="submit" class="btn ml-2 btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-pen" viewBox="0 0 16 16">
+                            <path
+                                d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                        </svg>
+                    </button>
+                </form>
+                <form action="{% url 'delete_post' post.id %}?next={{ request.path }}" method="post">
+                    {% csrf_token %}
+                    <button id="delete" type="submit" class="btn ml-2 btn-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash" viewBox="0 0 16 16">
+                            <path
+                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                            <path fill-rule="evenodd"
+                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                        </svg>
+                    </button>
+                </form>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <p class="card-text">{{ post.creation_time }}</p>
+        <div class="card-text lead">{{ post.content }}</div>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" style="width: 15%;">
+        {% endif %}
+        {% if user.is_authenticated %}
+        <form action="{% url 'like' %}?next={{ request.path }}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="post_id" value="{{ post.id }}">
+            <button id="like" type="submit" class="btn btn-light">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart"
+                    viewBox="0 0 16 16">
+                    <path
+                        d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                </svg>
+            </button>
+            {{ post.post_likes.count }}
+        </form>
+
+        <form action="{% url 'comment' post.id %}?next={{ request.path }}" method="post">
+            {% csrf_token %}
+            <div class="d-flex flex-row border my-4">
+                {{ comment_form }}
+                <input type="submit" value="Comment" class="btn btn-primary"></button>
+            </div>
+        </form>
+        {% endif %}
+
+
+        <h6>Comments:</h6>
+        {% for comment in post.post_comments.all %}
+
+        <div class="d-flex flex-row ml-3">
+            <p class="mt-2"><a href="{% url 'profile' comment.user.id %}">{{ comment.user }}</a>: {{ comment.content }}
+            </p>
+            {% if user.is_authenticated %}
+            <form action="{% url 'like' %}?next={{ request.path }}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                <button id="like" type="submit" class="btn btn-light">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-heart" viewBox="0 0 16 16">
+                        <path
+                            d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                    </svg>
+                </button>
+                {{ comment.comment_likes.count }}
+            </form>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+
+
+
+    </div>
+</div>
+<br>
+
+
+{% endfor %}
+
+{% endblock %}
