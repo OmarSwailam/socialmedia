@@ -1,6 +1,6 @@
 # SocialMediaApp
 
-using Django and sqlite
+using Django and postgres
 
 Features:
   - Create new Post
@@ -11,25 +11,25 @@ Features:
   - Follow/unfollow users
   - “Like” and “Unlike” a Post or a Comment
   - See user's following Posts
-  
+
 Installation:
 
     # clone repository
       git clone https://github.com/omarrAbdelrazek/SocialMediaApp.git
-      
+
     # Create a virtualenv(optional)
-      python3 -m venv venv  
-     
-      
+      python3 -m venv venv
+
+
     # Install all dependencies
        pip install -r requirements.txt
-       
-      
+
+
     # Activate the virtualenv
       source venv/bin/activate or .venv/bin/activate
-    
+
     # Run application
      ./manage.py runserver or python manage.py runserver
-     
+
 Author:
   Omar Swailam
