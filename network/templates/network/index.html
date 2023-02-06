@@ -118,7 +118,8 @@
 </div>
 <br>
 
-
 {% endfor %}
+
+{% include 'network/paginator.html' with query_set=posts custom_paginator=custom_paginator %}
 
 {% endblock %}

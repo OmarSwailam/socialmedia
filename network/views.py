@@ -5,15 +5,18 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import *
 from .models import *
-
+from .utils import paginatePosts
 
 def index(request):
     posts = Post.objects.all().order_by("-creation_time").all()
+    posts, custom_paginator = paginatePosts(request, posts, 10)
+
     return render(request, "network/index.html", {
         "post_form": PostForm(),
         "comment_form": CommentForm(),
         "posts": posts,
-        "posts_type": "All Posts"
+        "posts_type": "All Posts",
+        'custom_paginator': custom_paginator
     })
 
 
@@ -174,11 +177,13 @@ def following(request):
     current_user = User.objects.get(pk=request.user.pk)
     users_posts = [user.get_user_followed_posts() for user in current_user.following.all()]
     posts = [post for user in users_posts for post in user]
-
+    posts, custom_paginator = paginatePosts(request, posts, 10)
 
     return render(request, "network/index.html", {
         "post_form": PostForm(),
         "comment_form": CommentForm(),
         "posts": posts,
-        "posts_type": "Following Posts"
+        "posts_type": "Following Posts",
+        'custom_paginator': custom_paginator
+
     })
