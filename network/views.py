@@ -177,7 +177,7 @@ def following(request):
 
 
     return render(request, "network/index.html", {
-        "form": PostForm(),
+        "post_form": PostForm(),
         "comment_form": CommentForm(),
         "posts": posts,
         "posts_type": "Following Posts"
