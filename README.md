@@ -20,7 +20,7 @@ Features:
 Installation:
 
     # clone repository
-      git clone https://github.com/omarrAbdelrazek/SocialMediaApp.git
+      git clone https://github.com/OmarSwailam/SocialMediaApp.git
 
     # Create a virtualenv(optional)
       python3 -m venv venv
